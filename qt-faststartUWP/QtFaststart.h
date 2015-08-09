@@ -60,7 +60,7 @@ namespace qt_faststartUWP
 	public ref class QtFaststart sealed
 	{
 	public:
-		void CreateEncodedVideoFileFromUri(Platform::String ^ fileName, Platform::String ^ destFileName);
+		void EncodeVideoFileFromUri(Platform::String ^ fileName);
 	private:
 		FILE *infile = NULL;
 		FILE *outfile = NULL;

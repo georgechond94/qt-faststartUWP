@@ -4,13 +4,19 @@
 using namespace qt_faststartUWP;
 using namespace Platform;
 
-void qt_faststartUWP::QtFaststart::CreateEncodedVideoFileFromUri(Platform::String ^ fileName, Platform::String ^ destFileName)
+void qt_faststartUWP::QtFaststart::EncodeVideoFileFromUri(Platform::String ^ fileName)
 {
 
+	std::wstring dest = fileName->Data();
+	wchar_t* newFileExt = L"_new.mp4";
+	size_t idx = dest.find(L".mp4");
+	dest.replace(idx,dest.length(),L"");
 
-	if (!String::CompareOrdinal(fileName, destFileName)) {
+	dest.append(newFileExt);
+
+	/*if (!String::CompareOrdinal(fileName, destFileName)) {
 		throw ref new InvalidArgumentException("Input and output files need to be different");
-	}
+	}*/
 
 	_wfopen_s(&infile,fileName->Data(), readMode);
 	if (!infile) {
@@ -187,7 +193,7 @@ void qt_faststartUWP::QtFaststart::CreateEncodedVideoFileFromUri(Platform::Strin
 		last_offset -= start_offset;
 	}
 
-	_wfopen_s(&outfile,destFileName->Data(), writeMode);
+	_wfopen_s(&outfile,dest.c_str(), writeMode);
 	if (!outfile) {
 		FreeResources();
 		throw ref new FailureException("Error creating new file");
@@ -230,8 +236,21 @@ void qt_faststartUWP::QtFaststart::CreateEncodedVideoFileFromUri(Platform::Strin
 		last_offset -= bytes_to_copy;
 	}
 
+
 	FreeResources();
 
+	if (_wremove(fileName->Data()) != 0)
+	{
+		throw ref new FailureException("Error replacing video");
+
+	}
+	else
+	{
+		if (_wrename(dest.c_str(), fileName->Data()) != 0 )
+		{
+			throw ref new FailureException("Error replacing video");
+		}
+	}
 }
 
 void qt_faststartUWP::QtFaststart::FreeResources()
