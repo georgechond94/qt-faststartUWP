@@ -16,4 +16,4 @@ Then use the QtFaststart class as below:
 
 ```
 
-And that's it! Your video file will be ready to be streamed over the web.
+And that's it! Your video file is ready to be streamed over the web.
